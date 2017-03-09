@@ -1,0 +1,2 @@
+pwd
+java -Xmx5g -cp '*' edu.stanford.nlp.pipeline.StanfordCoreNLP -annotators 'tokenize,ssplit,pos,lemma,ner,color' -properties color.properties  -file input.txt -outputFormat json

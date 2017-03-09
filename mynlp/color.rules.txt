@@ -1,0 +1,140 @@
+# Colors
+# Example to add "COLOR" as ner tag, and hex RGB code as the normalized tag for strings matching a color
+
+# Case insensitive pattern matching (see java.util.regex.Pattern flags)
+ENV.defaultStringPatternFlags = 2
+
+# Map variable names to annotation keys
+ner = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$NamedEntityTagAnnotation" }
+normalized = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$NormalizedNamedEntityTagAnnotation" }
+tokens = { type: "CLASS", value: "edu.stanford.nlp.ling.CoreAnnotations$TokensAnnotation" }
+
+# Create OR pattern of
+#  regular expression over tokens to hex RGB code
+#  for colors and save it in a variable
+$Colors = (
+/Doctor|doctor|Doctors|doctors|patient|Patient|Patients|patients|cure|treat|Cure|Cures|cures|treats|Treat|Treats|Medicine|Medicines|medicine|medicines/
+)
+$Colors1 = (
+ /make/ /up/ |
+ /Make/ /up/ |
+ /spa|SPA|Spa|SPa/ |
+ /Fitness|fitness/ |
+ /Gym|GYM|gym/ 
+)
+$Colors2 = (
+([ner: NUMBER]+) /page|pages/
+)
+$Colors3 = (
+/the|The|a|A/ []{0,3} /page|pages/ 
+)
+$Colors4 = (
+/heading|Heading|headings|Headings/
+)
+$Colors5 = (
+ /preorder/ |
+ /Preorder/ |
+ /subscribe|subscribes/ |
+ /Subscribe|Subscribes/
+)
+$Colors6 = (
+ /sandwich|Sandwich|sandwichs|Sandwichs/ |
+ /Desert|desert|deserts|Deserts/ |
+ /Drinks|Drink|drink|drinks/ |
+ /Combo|combo|Combos|combos/
+)
+$Colors7 = (
+ /shop|Shop|shops|Shops/ |
+ /price|Price/ |
+ /product|Product|Products|products/
+)
+$Colors8 = (
+ /Deals|Deal|deal|deals/ |
+ /production|Production/ |
+ /partners|Partners|partner|Partner/
+)
+$Colors9 = (
+/Paragraph|paragraph|information|Information/
+)
+$Colors10 = (
+ /title|Title/ |
+ (/page/) /title/ |
+ (/Page/) /Title/ |
+ (/Page/) /title/ |
+ (/page/) /Title/
+)
+$Colors11 = (
+ /body|Body/
+)
+$Colors12 = (
+ /anchor|Anchor|anchors|Anchors/
+)
+$Colors13 = (
+ /img|image|images|Image|Images|Img/
+)
+$Colors14 = (/www.google.com.eg/)
+$Colors15 = (/button|buttons|Button|Buttons/)
+$Colors16 = (/List|list|Ul|ul/)
+$Colors17 = (
+/li|Li/ |
+/List|list/ /item|Item/ 
+)
+$Colors18 = (
+/Box|box/ 
+)
+$Colors19 = (
+/area|Area/ 
+)
+$Colors20 = (
+/text|Text/ 
+)
+# Define ruleType to be over tokens
+ENV.defaults["ruleType"] = "tokens"
+
+# Define rule that
+#  upon matching pattern defined by $Color
+#  annotate matched tokens ($0) with ner="COLOR" and normalized=matched value ($$0.value)
+
+
+{ pattern: ( $Colors ), 
+  action: ( Annotate($0, ner, "medical"), Annotate($0, normalized, "description" ))}
+{ pattern: ( $Colors1 ), 
+  action: ( Annotate($0, ner, "healthybeauty"), Annotate($0, normalized, "description" ))}
+{ pattern: ( $Colors2 ), 
+  action: ( Annotate($0, ner, "NOofpages"))}
+{ pattern: ( $Colors3 ), 
+  action: ( Annotate($0, ner, "pagename"))}
+{ pattern: ( $Colors4 ), 
+  action: ( Annotate($0, ner, "header"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors5 ), 
+  action: ( Annotate($0, ner, "loadingpage"), Annotate($0, normalized, "description" ))}
+{ pattern: ( $Colors6 ), 
+  action: ( Annotate($0, ner, "restaurantsfood"), Annotate($0, normalized, "description" ))}
+{ pattern: ( $Colors7 ), 
+  action: ( Annotate($0, ner, "onlinestore"), Annotate($0, normalized, "description" ))}
+{ pattern: ( $Colors8 ), 
+  action: ( Annotate($0, ner, "business"), Annotate($0, normalized, "description" ))}
+{ pattern: ( $Colors9 ), 
+  action: ( Annotate($0, ner, "p"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors10 ), 
+  action: ( Annotate($0, ner, "title"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors11 ), 
+  action: ( Annotate($0, ner, "body"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors12 ), 
+  action: ( Annotate($0, ner, "a"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors13 ), 
+  action: ( Annotate($0, ner, "img"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors14 ), 
+  action: ( Annotate($0, ner, "link"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors15 ), 
+  action: ( Annotate($0, ner, "button"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors16 ), 
+  action: ( Annotate($0, ner, "ul"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors17 ), 
+  action: ( Annotate($0, ner, "li"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors18 ), 
+  action: ( Annotate($0, ner, "textbox"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors19 ), 
+  action: ( Annotate($0, ner, "textarea"), Annotate($0, normalized, "website" ))}
+{ pattern: ( $Colors20 ), 
+  action: ( Annotate($0, ner, "text"), Annotate($0, normalized, "website" ))}
